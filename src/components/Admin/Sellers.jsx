@@ -69,7 +69,7 @@ const Sellers = () => {
       <input type="text" onChange={(e) => setName(e.target.value)} />
       <button onClick={addSeller}>Add Seller</button>
       {isLoading && <Loader />}
-      {errors && <em>{error.message}</em>}
+      {error && <em>{error.message}</em>}
 
       <table>
         <tbody>
