@@ -1,15 +1,11 @@
 /* eslint-disable */
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import apiClient from "../../utils/api-client";
 import Loader from "../Common/Loader";
-import { useQuery } from "@tanstack/react-query";
+import useSellers from "./../../hooks/useSellers";
 
 const Sellers = () => {
-  const fetchSellers = () => apiClient.get("/users").then((res) => res.data);
-  const { data: sellers } = useQuery({
-    queryKey: ["sellers"],
-    queryFn: fetchSellers,
-  });
+  const { data: sellers, error, isLoading } = useSellers();
   const [name, setName] = useState("");
   // const [isLoading, setIsLoading] = useState(false);
   // const [errors, setErrors] = useState("");
@@ -72,8 +68,8 @@ const Sellers = () => {
       <h3>Admin Sellers Page</h3>
       <input type="text" onChange={(e) => setName(e.target.value)} />
       <button onClick={addSeller}>Add Seller</button>
-      {/* {isLoading && <Loader />}
-            {errors && <em>{errors}</em>} */}
+      {isLoading && <Loader />}
+      {errors && <em>{error.message}</em>}
 
       <table>
         <tbody>
