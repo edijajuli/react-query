@@ -1,19 +1,23 @@
 /*eslint-disable*/
 import apiClient from "../utils/api-client";
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-const useTodos = (userId) => {
-    const params = {}
-    if (userId) {
-        params.userId = userId
-    }
+const useTodos = (query) => {
+    // const params = {}
+    // if (userId) {
+    //     params.userId = userId
+    // }
     const fetchTodos = () => apiClient.get(`/todos`, {
-        params
+        params: {
+            _limit: query.pageSize,
+            _start: (query.page - 1) * query.pageSize,
+        }
     }).then(res => res.data)
     return useQuery({
-        //users/1/todos
-        queryKey: userId ? ["user", userId, "todos"] : ["todos"],
+
+        queryKey: ["todos", query],
         queryFn: fetchTodos,
+        placeholderData: keepPreviousData,
     })
 }
 
