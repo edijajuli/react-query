@@ -1,12 +1,20 @@
 /* eslint-disable*/
-import { useState } from "react";
+import React from "react";
 import Loader from "../Common/Loader";
 import useTodos from "./../../hooks/useTodos";
 const Sales = () => {
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
   const pageSize = 10;
   // const [userId, setUserId] = useState(null);
-  const { data: todos, error, isLoading } = useTodos({ page, pageSize });
+  const {
+    data,
+    error,
+    isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useTodos({ pageSize });
+  console.log(data);
   return (
     <>
       <h3>Todos Page</h3>
@@ -23,10 +31,14 @@ const Sales = () => {
       </select> */}
       {isLoading && <Loader />}
       {error && <em>{error.message}</em>}
-      {todos?.map((todo) => (
-        <p key={todo.id}>{todo.title}</p>
+      {data?.pages.map((page, index) => (
+        <React.Fragment key={index}>
+          {page.map((todo) => (
+            <p key={todo.id}>{todo.title}</p>
+          ))}
+        </React.Fragment>
       ))}
-      <button disabled={page === 1} onClick={() => setPage(page - 1)}>
+      {/* <button disabled={page === 1} onClick={() => setPage(page - 1)}>
         Previous
       </button>
       <button
@@ -34,7 +46,13 @@ const Sales = () => {
         onClick={() => setPage(page + 1)}
       >
         Next
-      </button>
+      </button> */}
+
+      {hasNextPage && (
+        <button disabled={isFetchingNextPage} onClick={fetchNextPage}>
+          {isFetchingNextPage ? "Loading..." : "Load More"}
+        </button>
+      )}
     </>
   );
 };
